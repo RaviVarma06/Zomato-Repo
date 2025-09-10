@@ -1,16 +1,17 @@
-
 pipeline {
     agent any
 
     tools {
-        jdk 'jdk17'
         nodejs 'node16'
-    }    
- environment {
+        jdk 'jdk17' // Optional, if needed for other tools
+    }
+
+    environment {
         SCANNER_HOME = tool 'mysonar'
-        AWS_REGION = 'us-east-1' // Change to your AWS region
+        AWS_REGION = 'us-east-1'
         ECR_REPO_APP = '585768179486.dkr.ecr.us-east-1.amazonaws.com/ravi031/myzomato'
     }
+
     stages {
         stage("Clean") {
             steps {
@@ -18,41 +19,42 @@ pipeline {
             }
         }
 
-        stage("Code") {
+        stage("Checkout Code") {
             steps {
                 git branch: 'main', url: 'https://github.com/RaviVarma06/Zomato-Repo.git'
             }
         }
 
-        
-       stage("CQA") {
+        stage("Install Dependencies") {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage("Code Quality Analysis") {
             steps {
                 withSonarQubeEnv('mysonar') {
-                    sh '''mvn clean verify sonar:sonar \
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=docker-webapp \
-                        -Dsonar.projectName='docker-webapp' \
+                        -Dsonar.projectName=docker-webapp \
+                        -Dsonar.sources=. \
                         -Dsonar.login=sqa_09f5f9a339c85ad4cd189f8c162e3abc9f95c851
                     '''
                 }
             }
         }
 
-        stage("Install dependencies") {
-            steps {
-                sh 'npm install'
-            }
-        }
-
- stage("Docker Build") {
+        stage("Docker Build & Tag") {
             steps {
                 script {
-                    sh "docker build -t  ravi031/myzomato"
-                    sh "docker tag ravi031/myzomato $ECR_REPO_APP                
+                    sh "docker build -t ravi031/myzomato ."
+                    sh "docker tag ravi031/myzomato $ECR_REPO_APP"
                 }
             }
         }
 
-  stage("Push to ECR") {
+        stage("Push to ECR") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'AWS-ECR-CREDS', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
@@ -66,16 +68,17 @@ pipeline {
             }
         }
 
-   stage("TrivyScan") {
+        stage("Trivy Scan") {
             steps {
                 sh 'trivy fs . > trivyfs.txt'
                 sh "trivy image $ECR_REPO_APP"
             }
         }
 
-        stage("Deploy to container"){
-            steps{
-	             sh 'docker run -d --name zomato -p 3000:3000 ravi031/myzomato'
-	          }
-      	}
+        stage("Deploy to Container") {
+            steps {
+                sh "docker run -d --name zomato -p 3000:3000 $ECR_REPO_APP"
+            }
+        }
     }
+}
