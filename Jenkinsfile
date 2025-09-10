@@ -9,8 +9,7 @@ pipeline {
  environment {
         SCANNER_HOME = tool 'mysonar'
         AWS_REGION = 'us-east-1' // Change to your AWS region
-        ECR_REPO_APP = '585768179486.dkr.ecr.us-east-1.amazonaws.com/ourproject/app'
-        ECR_REPO_DB  = '585768179486.dkr.ecr.us-east-1.amazonaws.com/ourproject/db'
+        ECR_REPO_APP = '585768179486.dkr.ecr.us-east-1.amazonaws.com/ravi031/myzomato'
     }
     stages {
         stage("Clean") {
@@ -47,8 +46,8 @@ pipeline {
  stage("Docker Build") {
             steps {
                 script {
-                    sh "docker build -t  ravi031/myzomato:v1"
-                    sh "docker tag ravi031/myzomato:v1 $ECR_REPO_APP                
+                    sh "docker build -t  ravi031/myzomato"
+                    sh "docker tag ravi031/myzomato $ECR_REPO_APP                
                 }
             }
         }
@@ -76,7 +75,7 @@ pipeline {
 
         stage("Deploy to container"){
             steps{
-	              sh 'docker-compose up -d'
+	             sh 'docker run -d --name zomato -p 3000:3000 ravi031/myzomato'
 	          }
       	}
     }
