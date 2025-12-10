@@ -8,8 +8,8 @@ pipeline {
 
     environment {
         SCANNER_HOME = tool 'mysonar'
-        AWS_REGION = 'us-east-1'
-        ECR_REPO_APP = '585768179486.dkr.ecr.us-east-1.amazonaws.com/ravi031/myzomato'
+        AWS_REGION = 'ap-south-1'
+        ECR_REPO_APP = '904923506382.dkr.ecr.us-east-1.amazonaws.com/ravi031/myzomato'
     }
 
     stages {
@@ -39,7 +39,8 @@ pipeline {
                         -Dsonar.projectKey=docker-webapp \
                         -Dsonar.projectName=docker-webapp \
                         -Dsonar.sources=. \
-                        -Dsonar.login=sqa_09f5f9a339c85ad4cd189f8c162e3abc9f95c851
+                        -Dsonar.login=sqa_c57711f61c5845601a8678702ba858b460cb3b1b
+
                     '''
                 }
             }
