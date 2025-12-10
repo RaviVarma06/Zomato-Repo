@@ -9,7 +9,7 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'mysonar'
         AWS_REGION = 'ap-south-1'
-        ECR_REPO_APP = '904923506382.dkr.ecr.us-east-1.amazonaws.com/ravi031/myzomato'
+        ECR_REPO_APP = '904923506382.dkr.ecr.ap-south-1.amazonaws.com/ravi031/myzomato'
     }
 
     stages {
