@@ -8,8 +8,8 @@ pipeline {
 
     environment {
         SCANNER_HOME = tool 'mysonar'
-        AWS_REGION = 'ap-south-1'
-        ECR_REPO_APP = '904923506382.dkr.ecr.ap-south-1.amazonaws.com/ravi031/myzomato'
+        AWS_REGION = 'us-east-1'
+        ECR_REPO_APP = '904923506382.dkr.ecr.us-east-1.amazonaws.com/ravi031/myzomato'
     }
 
     stages {
@@ -35,11 +35,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('mysonar') {
                     sh '''
-                        $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectKey=docker-webapp \
-                        -Dsonar.projectName=docker-webapp \
-                        -Dsonar.sources=. \
-                        -Dsonar.login=sqa_3fb3fedeb9cdea5113dea000cdfddd79c074fb4b
+                        mvn clean verify sonar:sonar \
+                       -Dsonar.projectKey=docker-webapp \
+                       -Dsonar.projectName='docker-webapp' \
+                       -Dsonar.host.url=http://54.163.55.199:9000 \
+                       -Dsonar.token=sqp_663dc10b2b9cdd387a807d174561358ac5829e1a
 
                     '''
                 }
