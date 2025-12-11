@@ -39,9 +39,7 @@ pipeline {
                         mvn clean verify sonar:sonar \
                        -Dsonar.projectKey=docker-webapp \
                        -Dsonar.projectName='docker-webapp' \
-                       -Dsonar.host.url=http://54.163.55.199:9000 \
                        -Dsonar.token=sqp_663dc10b2b9cdd387a807d174561358ac5829e1a
-
                     '''
                 }
             }
