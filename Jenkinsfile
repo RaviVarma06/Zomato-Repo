@@ -36,7 +36,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('mysonar') {
                     sh '''
-                        mvn clean verify sonar:sonar \
+                        $SCANNER_HOME/bin/Sonar-Scanner\
                        -Dsonar.projectKey=docker-webapp \
                        -Dsonar.projectName='docker-webapp' \
                        -Dsonar.token=sqa_3fb3fedeb9cdea5113dea000cdfddd79c074fb4b
