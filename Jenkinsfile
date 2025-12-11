@@ -36,7 +36,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('mysonar') {
                     sh '''
-                        $SCANNER_HOME/bin/Sonar-Scanner\
+                        $SCANNER_HOME/bin/sonar-scanner\
                        -Dsonar.projectKey=docker-webapp \
                        -Dsonar.projectName='docker-webapp' \
                        -Dsonar.token=sqa_3fb3fedeb9cdea5113dea000cdfddd79c074fb4b
